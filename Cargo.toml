@@ -1,0 +1,12 @@
+[package]
+name = "fluorescence"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rand = "0.8.5"
+spin = "0.9"
+lazy_static = "1.4"
+
+[dev-dependencies]
+image = "0.25.5"
