@@ -1,4 +1,4 @@
-# 🌟 Fluorescence
+<h1 align="center">🌟 Fluorescence</h1>
 
 An image library for color, blur, transformation, and feature extraction.
 

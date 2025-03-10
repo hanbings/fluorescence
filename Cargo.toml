@@ -1,0 +1,18 @@
+[package]
+name = "fluorescence"
+version = "0.1.0"
+edition = "2024"
+repository = "https://github.com/hanbings/fluorescence"
+authors = ["hanbings@hanbings.io"]
+description = "✨ Fluorescence - A library for dominant color extraction and fuzzy graphics processing."
+keywords = ["image", "kmeans", "color", "blur"]
+license = "MIT"
+
+[lib]
+name = "fluorescence"
+path = "crates/src/lib.rs"
+
+[dependencies]
+rand = "0.9.0"
+spin = "0.9"
+lazy_static = "1.4"
