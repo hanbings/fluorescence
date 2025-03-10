@@ -1,0 +1,10 @@
+{
+  "name": "hanbings/fluorescence",
+  "version": "0.1.0",
+  "readme": "README.md",
+  "repository": "https://github.com/hanbings/fluorescence",
+  "license": "MIT",
+  "keywords": ["image", "kmeans", "color", "blur"],
+  "description": "",
+  "source": "src"
+}
