@@ -6,5 +6,5 @@
   "license": "MIT",
   "keywords": ["image", "kmeans", "color", "blur"],
   "description": "✨ Fluorescence - A library for dominant color extraction and fuzzy graphics processing.",
-  "source": "mooncake/src"
+  "source": "mooncakes/src"
 }
