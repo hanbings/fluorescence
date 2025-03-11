@@ -4,6 +4,12 @@
 
 An image library for color, blur, transformation, and feature extraction.
 
+## Image
+
+> This section is only provided for moonbit. There is no cake in moonbit that can load and parse images.
+> 
+> It is expected to support popular formats such as bmp, jpeg, png, etc.
+
 
 ## Blur
 
