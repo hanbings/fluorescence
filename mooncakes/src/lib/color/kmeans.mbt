@@ -23,17 +23,16 @@ pub(all) struct Kmeans {
 /// ### Returns
 /// Array of primary colors with length determined by init_centroid parameter
 impl PrimanyColor for Kmeans with get_primary_colors(self) {
-  let random = @random.new()
+  let random = @random.Rand::new()
   let mut centroid : Array[@lib.RgbaColor] = (0)
     .until(self.init_centroid)
-    .map(fn {
-      _ =>
-        @lib.RgbaColor::{
-          r: random.int(limit=255).to_byte(),
-          g: random.int(limit=255).to_byte(),
-          b: random.int(limit=255).to_byte(),
-          a: random.int(limit=255).to_byte(),
-        }
+    .map(fn(_entry) {
+      @lib.RgbaColor::{
+        r: random.int(limit=255).to_byte(),
+        g: random.int(limit=255).to_byte(),
+        b: random.int(limit=255).to_byte(),
+        a: random.int(limit=255).to_byte(),
+      }
     })
     .collect()
   let center_cluster : Array[Array[@lib.RgbaColor]] = Array::makei(
