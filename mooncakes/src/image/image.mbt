@@ -13,7 +13,7 @@ pub(all) struct Image {
   heigth : Int
 } derive(Default, Eq, Show)
 
-///| Computes the Euclidean distance between two RGBA colors.
+/// Computes the Euclidean distance between two RGBA colors.
 ///
 /// # Parameters
 /// - `color_a`: The first RGBA color.
