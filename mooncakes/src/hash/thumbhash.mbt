@@ -53,8 +53,8 @@ pub fn rgba_to_thumb_hash(w : Int, h : Int, rgba : Array[Byte]) -> Array[Byte] {
 
   let has_alpha = avg_a < (w * h).to_double()
   let l_limit = if has_alpha { 5 } else { 7 } // Use fewer luminance bits if there's alpha
-  let lx = max_double((l_limit * w / max(w, h)).to_double().round(), 1)
-  let ly = max_double((l_limit * h / max(w, h)).to_double().round(), 1)
+  let lx = @cmp.maximum((l_limit * w / @cmp.maximum(w, h)).to_double().round(), 1)
+  let ly = @cmp.maximum((l_limit * h / @cmp.maximum(w, h)).to_double().round(), 1)
   let l = Array::new() // luminance
   let p = Array::new() // yellow - blue
   let q = Array::new() // red - green
@@ -105,7 +105,7 @@ pub fn rgba_to_thumb_hash(w : Int, h : Int, rgba : Array[Byte]) -> Array[Byte] {
         f /= (w * h).to_double()
         if cx > 0 || cy > 0 {
           ac.push(f)
-          scale = max_double(f.abs(), scale)
+          scale = @cmp.maximum(f.abs(), scale)
         } else {
           dc = f
         }
@@ -123,8 +123,8 @@ pub fn rgba_to_thumb_hash(w : Int, h : Int, rgba : Array[Byte]) -> Array[Byte] {
   // Encode using the DCT into DC (constant) and normalized AC (varying) terms
   let (l_dc, l_ac, l_scale) = encode_channel(
     l,
-    max(lx.to_int(), 3),
-    max(ly.to_int(), 3),
+    @cmp.maximum(lx.to_int(), 3),
+    @cmp.maximum(ly.to_int(), 3),
   )
   let (p_dc, p_ac, p_scale) = encode_channel(p, 3, 3)
   let (q_dc, q_ac, q_scale) = encode_channel(q, 3, 3)
@@ -204,22 +204,4 @@ pub fn rgba_to_thumb_hash(w : Int, h : Int, rgba : Array[Byte]) -> Array[Byte] {
     }
   }
   hash
-}
-
-///|
-fn max(a : Int, b : Int) -> Int {
-  if a > b {
-    a
-  } else {
-    b
-  }
-}
-
-///|
-fn max_double(a : Double, b : Double) -> Double {
-  if a > b {
-    a
-  } else {
-    b
-  }
 }
