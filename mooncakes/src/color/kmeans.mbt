@@ -6,7 +6,7 @@ pub(all) struct Kmeans {
   min_distance : Float
 }
 
-/// K-means clustering implementation for extracting primary colors from images
+///| K-means clustering implementation for extracting primary colors from images
 /// 
 /// ### Parameters
 /// - init_centroid: Number of initial cluster centers

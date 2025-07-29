@@ -1,4 +1,4 @@
-/// Converts an RGBA image to a ThumbHash byte array.
+///| Converts an RGBA image to a ThumbHash byte array.
 ///
 /// ThumbHash is a compact image fingerprint that captures the essential
 /// color and structure information of an image, enabling quick comparison
@@ -44,17 +44,21 @@ pub fn rgba_to_thumb_hash(w : Int, h : Int, rgba : Array[Byte]) -> Array[Byte] {
     avg_b = avg_b + alpha / 255.0 * rc.get(2).unwrap_or_default().to_double()
     avg_a = avg_a + alpha
   }
-
   if avg_a > 0.0 {
     avg_r /= avg_a
     avg_g /= avg_a
     avg_b /= avg_a
   }
-
   let has_alpha = avg_a < (w * h).to_double()
   let l_limit = if has_alpha { 5 } else { 7 } // Use fewer luminance bits if there's alpha
-  let lx = @cmp.maximum((l_limit * w / @cmp.maximum(w, h)).to_double().round(), 1)
-  let ly = @cmp.maximum((l_limit * h / @cmp.maximum(w, h)).to_double().round(), 1)
+  let lx = @cmp.maximum(
+    (l_limit * w / @cmp.maximum(w, h)).to_double().round(),
+    1,
+  )
+  let ly = @cmp.maximum(
+    (l_limit * h / @cmp.maximum(w, h)).to_double().round(),
+    1,
+  )
   let l = Array::new() // luminance
   let p = Array::new() // yellow - blue
   let q = Array::new() // red - green
@@ -74,7 +78,6 @@ pub fn rgba_to_thumb_hash(w : Int, h : Int, rgba : Array[Byte]) -> Array[Byte] {
     q.push(r - g)
     a.push(alpha)
   }
-
   let encode_channel = fn(
     channel : Array[Double],
     nx : Int,
@@ -93,7 +96,6 @@ pub fn rgba_to_thumb_hash(w : Int, h : Int, rgba : Array[Byte]) -> Array[Byte] {
             @math.PI / w.to_double() * cx.to_double() * (x.to_double() + 0.5),
           )
         }
-
         for y in 0..<h {
           let fy = @math.cos(
             @math.PI / h.to_double() * cy.to_double() * (y.to_double() + 0.5),
@@ -109,11 +111,9 @@ pub fn rgba_to_thumb_hash(w : Int, h : Int, rgba : Array[Byte]) -> Array[Byte] {
         } else {
           dc = f
         }
-
         cx += 1
       }
     }
-
     if scale > 0.0 {
       ac = ac.map(a => 0.5 + 0.5 / scale * a)
     }
@@ -134,38 +134,30 @@ pub fn rgba_to_thumb_hash(w : Int, h : Int, rgba : Array[Byte]) -> Array[Byte] {
     (1.0, Array::new(), 1.0)
   }
 
-  // Write the constants
-  let l_dc_val = (63.0 * l_dc).round()
-  let p_dc_val = (31.5 + 31.5 * p_dc).round()
-  let q_dc_val = (31.5 + 31.5 * q_dc).round()
-  let l_scale_val = (31.0 * l_scale).round()
-  let alpha_val = if has_alpha { 1.0 } else { 0.0 }
-  let header24 = l_dc_val +
-    p_dc_val * 64 + // 2^6
-    q_dc_val * 4096 + // 2^12
-    l_scale_val * 262144 + // 2^18
-    alpha_val * 8388608 // 2^23
+  // Encode the first 24 bits (3 bytes) of the hash header:
+  // These bits encode average luminance, chroma DC, scale, and alpha presence.
+  let header24 = (63.0 * l_dc).round().to_int() + // 6 bits: average luminance [0, 63]
+    ((31.5 + 31.5 * p_dc).round().to_int() << 6) + // 6 bits: red-green chroma DC [-1, 1] mapped to [0, 63]
+    ((31.5 + 31.5 * q_dc).round().to_int() << 12) + // 6 bits: blue-yellow chroma DC [-1, 1] mapped to [0, 63]
+    ((31.0 * l_scale).round().to_int() << 18) + // 5 bits: luminance AC scale [0, 1] mapped to [0, 31]
+    ((if has_alpha { 1 } else { 0 }) << 23) // 1 bit : alpha presence flag (1 = has alpha)
 
-  let is_landscape = w > h
-  let orientation_val = if is_landscape { ly } else { lx }
-  let p_scale_val = (63.0 * p_scale).round()
-  let q_scale_val = (63.0 * q_scale).round()
-  let landscape_flag = if is_landscape { 1.0 } else { 0.0 }
-  let header16 = orientation_val +
-    p_scale_val * 8 + // 2^3
-    q_scale_val * 512 + // 2^9
-    landscape_flag * 32768 // 2^15
+  // Encode the next 16 bits (2 bytes) of the hash header:
+  // These bits encode orientation and chroma AC scale.
+  let header16 = (if w > h { ly } else { lx }).to_int() + // 3 bits: number of X or Y AC coefficients (orientation-dependent)
+    ((63.0 * p_scale).round().to_int() << 3) + // 6 bits: red-green chroma AC scale [0, 1]s
+    ((63.0 * q_scale).round().to_int() << 9) + // 6 bits: blue-yellow chroma AC scale [0, 1]
+    ((if w > h { 1 } else { 0 }) << 15) // 1 bit : landscape orientation flag
+
+  // Write the header to the hash byte array (little endian)
   let hash : Array[Byte] = Array::new()
-  let header24_bytes = header24.to_int().to_le_bytes()
-  let header16_bytes = header16.to_int().to_le_bytes()
   hash.append([
-    header24_bytes.get(0).unwrap_or_default(),
-    header24_bytes.get(1).unwrap_or_default(),
-    header24_bytes.get(2).unwrap_or_default(),
-    header16_bytes.get(0).unwrap_or_default(),
-    header16_bytes.get(1).unwrap_or_default(),
+    (header24 & 0xFF).to_byte(),
+    ((header24 >> 8) & 0xFF).to_byte(),
+    ((header24 >> 16) & 0xFF).to_byte(),
+    (header16 & 0xFF).to_byte(),
+    ((header16 >> 8) & 0xFF).to_byte(),
   ])
-
   let mut is_odd = false
   if has_alpha {
     let a_dc_val = (15.0 * a_dc).round()
@@ -180,7 +172,8 @@ pub fn rgba_to_thumb_hash(w : Int, h : Int, rgba : Array[Byte]) -> Array[Byte] {
       let u = (15.0 * f).round()
       if is_odd {
         let last = hash.last().unwrap()
-        let last_val = last + u.to_int().to_le_bytes().get(0).unwrap_or_default() * 16
+        let last_val = last +
+          u.to_int().to_le_bytes().get(0).unwrap_or_default() * 16
         let _ = hash.pop()
         hash.push(last_val)
       } else {
@@ -194,7 +187,8 @@ pub fn rgba_to_thumb_hash(w : Int, h : Int, rgba : Array[Byte]) -> Array[Byte] {
       let u = (15.0 * f).round()
       if is_odd {
         let last = hash.last().unwrap()
-        let last_val = last + u.to_int().to_le_bytes().get(0).unwrap_or_default() * 16
+        let last_val = last +
+          u.to_int().to_le_bytes().get(0).unwrap_or_default() * 16
         let _ = hash.pop()
         hash.push(last_val)
       } else {
