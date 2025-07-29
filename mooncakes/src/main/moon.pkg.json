@@ -1,7 +1,4 @@
 {
   "is-main": true,
-  "import": [
-    "hanbings/fluorescence/hash",
-    "gmlewis/base64"
-  ]
+  "import": []
 }
