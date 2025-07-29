@@ -5,7 +5,7 @@ pub fn fast_blur(
   y0 : UInt,
   x1 : UInt,
   y1 : UInt,
-  width : UInt
+  width : UInt,
 ) -> Unit {
   let kernel_size = 3
   let radius = kernel_size / 2

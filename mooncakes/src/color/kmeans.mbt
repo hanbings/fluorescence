@@ -1,6 +1,6 @@
 ///|
 pub(all) struct Kmeans {
-  image : @lib.Image
+  image : @image.Image
   init_centroid : Int
   iteration : Int
   min_distance : Float
@@ -24,10 +24,10 @@ pub(all) struct Kmeans {
 /// Array of primary colors with length determined by init_centroid parameter
 impl PrimanyColor for Kmeans with get_primary_colors(self) {
   let random = @random.Rand::new()
-  let mut centroid : Array[@lib.RgbaColor] = (0)
+  let mut centroid : Array[@image.RgbaColor] = (0)
     .until(self.init_centroid)
     .map(fn(_entry) {
-      @lib.RgbaColor::{
+      @image.RgbaColor::{
         r: random.int(limit=255).to_byte(),
         g: random.int(limit=255).to_byte(),
         b: random.int(limit=255).to_byte(),
@@ -35,7 +35,7 @@ impl PrimanyColor for Kmeans with get_primary_colors(self) {
       }
     })
     .collect()
-  let center_cluster : Array[Array[@lib.RgbaColor]] = Array::makei(
+  let center_cluster : Array[Array[@image.RgbaColor]] = Array::makei(
     self.init_centroid,
     fn(_) { [] },
   )
@@ -47,7 +47,7 @@ impl PrimanyColor for Kmeans with get_primary_colors(self) {
     // calculate which particle is closest to each pixel
     for pixel in self.image.pixels {
       let dists = centroid.mapi(fn(index, center) {
-        (index, @lib.RgbaColor::calc_dist(center, pixel))
+        (index, @image.RgbaColor::calc_dist(center, pixel))
       })
 
       // select the particle with the shortest distance
@@ -62,10 +62,12 @@ impl PrimanyColor for Kmeans with get_primary_colors(self) {
     }
 
     // calculate a new set of centroid
-    let new_centroid : Array[@lib.RgbaColor] = center_cluster.map(fn(cluster) {
+    let new_centroid : Array[@image.RgbaColor] = center_cluster.map(fn(
+      cluster,
+    ) {
       let acc : (Byte, Byte, Byte, Byte, Byte) = cluster.fold(
         init=(0, 0, 0, 0, 0),
-        fn(acc : (Byte, Byte, Byte, Byte, Byte), pixel : @lib.RgbaColor) {
+        fn(acc : (Byte, Byte, Byte, Byte, Byte), pixel : @image.RgbaColor) {
           (
             acc.0 + pixel.r,
             acc.1 + pixel.g,
@@ -76,21 +78,21 @@ impl PrimanyColor for Kmeans with get_primary_colors(self) {
         },
       )
       if acc.4 > 0 {
-        return @lib.RgbaColor::{
+        return @image.RgbaColor::{
           r: acc.0 / acc.4,
           g: acc.1 / acc.4,
           b: acc.2 / acc.4,
           a: acc.3 / acc.4,
         }
       }
-      @lib.RgbaColor::{ r: 0, g: 0, b: 0, a: 255 }
+      @image.RgbaColor::{ r: 0, g: 0, b: 0, a: 255 }
     })
 
     // prevent infinite number of iterations, in fact we only need a certain degree of results.
     let mut is_settled = true
     new_centroid.each(fn(a) {
       centroid.each(fn(b) {
-        if @lib.RgbaColor::calc_dist(a, b) > self.min_distance {
+        if @image.RgbaColor::calc_dist(a, b) > self.min_distance {
           is_settled = false
         }
       })
