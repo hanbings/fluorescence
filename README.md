@@ -11,15 +11,9 @@ An image library for color, blur, transformation, and feature extraction.
 > It is expected to support popular formats such as bmp, jpeg, png, etc.
 
 
-## Blur
-
-## Color
-
-### Kmeans
-
 ## Hash
 
-### thumbhash
+### Thumbhash
 
 ThumbHash is a compact image placeholder format that can be directly embedded in JSON or stored in databases using Base64 encoding. It enables smooth visual transitions while the actual image is loading.
 
@@ -28,6 +22,13 @@ for moonbit, it can serve as a high-performance WebAssembly implementation embed
 Its effect is as follows: after hashing, you obtain a short string that can be used as a placeholder while the actual image data is still loading.
 
 ![Demo](https://youke1.picui.cn/s1/2025/07/31/688a7153a9f61.png)
+
+
+## Blur
+
+## Color
+
+### Kmeans
 
 #### 🦀 Rust
 After installing this crates, We need to load the image from disk and pass it into a special data structure, which is prepared for `no_std` environments (such as bare metal environments or WASM).
