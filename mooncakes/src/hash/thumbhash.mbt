@@ -1,4 +1,5 @@
-///| Converts an RGBA image to a ThumbHash byte array.
+///|
+/// Converts an RGBA image to a ThumbHash byte array.
 ///
 /// ThumbHash is a compact image fingerprint that captures the essential
 /// color and structure information of an image, enabling quick comparison
