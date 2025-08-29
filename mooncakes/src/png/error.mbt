@@ -30,4 +30,4 @@ suberror PngError {
   MissingPalette
   TrnsInvalidForColorType
   TextInvalid(String)
-}
+} derive(Show)
