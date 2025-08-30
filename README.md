@@ -10,6 +10,31 @@ An image library for color, blur, transformation, and feature extraction.
 > 
 > It is expected to support popular formats such as bmp, jpeg, png, etc.
 
+### PNG
+
+We have written a PNG file parser that currently detects the file header and basic color information of a PNG file, as well as the undecoded content of the PNG file including data chunks.
+
+```moonbit
+fn main {
+  try
+    @fs.read_file_to_bytes(
+      "icons8-github-48.png",
+    )
+  catch {
+    _ => println("error")
+  } noraise {
+    bytes => {
+      try @png.parse_png(bytes.to_array()) catch {
+        err => println(err)
+      } noraise {
+        data => println(data)
+      }
+      ()
+    }
+  }
+}
+```
+
 
 ## Hash
 
