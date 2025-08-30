@@ -1,4 +1,5 @@
-///| use the 32x32 Lenna image to test the thumbhash function.
+///|
+/// use the 32x32 Lenna image to test the thumbhash function.
 /// about lenna: https://en.wikipedia.org/wiki/Lenna
 /// 
 /// thumbhash hashes generally produce consistent results across different machines. 
