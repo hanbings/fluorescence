@@ -3,7 +3,7 @@ pub struct BadChunkCrc {
   chunk_type : Array[Byte]
   expected : UInt
   actual : UInt
-}
+} derive(Show)
 
 ///|
 pub struct ZlibAdlerMismatch {
@@ -16,7 +16,7 @@ suberror PngError {
   Io(Error)
   InvalidSignature
   UnexpectedEof
-  BadChunkCrc
+  BadChunkCrc(BadChunkCrc)
   BadIhdrLength(Int)
   InvalidIhdr(String)
   NoIhdr

@@ -6,7 +6,7 @@ pub enum ColorType {
   Palette
   GrayscaleAlpha
   Rgba
-}
+} derive(Show)
 
 ///|
 pub fn color_type_to_string(color_type : ColorType) -> String {
@@ -29,7 +29,7 @@ pub struct Ihdr {
   compression_method : Byte
   filter_method : Byte
   interlace_method : Byte
-}
+} derive(Show)
 
 ///|
 /// Physical pixel size
@@ -37,19 +37,19 @@ pub struct Phys {
   pixels_per_unit_x : UInt
   pixels_per_unit_y : UInt
   unit_is_meter : Bool
-}
+} derive(Show)
 
 ///|
 pub struct TExt {
   keyword : String
   text : String
-}
+} derive(Show)
 
 ///|
 pub struct ZTxt {
   keyword : String
   text : String
-}
+} derive(Show)
 
 ///|
 pub struct ITxt {
@@ -57,7 +57,7 @@ pub struct ITxt {
   language_tag : String
   translated_keyword : String
   text : String
-}
+} derive(Show)
 
 ///|
 /// Text Block
@@ -65,7 +65,7 @@ pub enum Text {
   TExt
   ZTxt
   ITxt
-}
+} derive(Show)
 
 ///|
 /// ICC Profiles
@@ -73,7 +73,7 @@ pub struct Iccp {
   name : String
   compression_method : Byte
   compressed_profile : Array[Byte]
-}
+} derive(Show)
 
 ///|
 /// Chromaticity information
@@ -86,13 +86,13 @@ pub struct ChrM {
   green_y : UInt
   blue_x : UInt
   blue_y : UInt
-}
+} derive(Show)
 
 ///|
 pub struct Gray {
   sample : UInt16
   bit_depth : Byte
-}
+} derive(Show)
 
 ///|
 pub struct Rgb {
@@ -100,15 +100,15 @@ pub struct Rgb {
   g : UInt16
   b : UInt16
   bit_depth : Byte
-}
+} derive(Show)
 
 ///|
 /// Transparency Information
 pub enum Trns {
   Palette(Array[Byte])
-  Gray
-  Rgb
-}
+  Gray(Gray)
+  Rgb(Rgb)
+} derive(Show)
 
 ///|
 /// PNG overall structure
@@ -129,4 +129,4 @@ pub struct Png {
 
   // compress image data
   idat : Array[Byte]
-}
+} derive(Show)
