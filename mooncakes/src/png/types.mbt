@@ -62,9 +62,9 @@ pub struct ITxt {
 ///|
 /// Text Block
 pub enum Text {
-  TExt
-  ZTxt
-  ITxt
+  TExt(TExt)
+  ZTxt(ZTxt)
+  ITxt(ITxt)
 } derive(Show)
 
 ///|
