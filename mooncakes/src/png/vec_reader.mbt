@@ -5,7 +5,7 @@ struct VecReader {
 }
 
 ///|
-fn vec_reader_read(self : VecReader, buf : Ref[Array[Byte]]) -> Int {
+fn VecReader::vec_reader_read(self : VecReader, buf : Ref[Array[Byte]]) -> Int {
   // EOF if cursor is at or beyond the end
   if self.pos >= self.data.length() {
     return 0

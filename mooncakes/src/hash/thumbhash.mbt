@@ -39,10 +39,10 @@ pub fn rgba_to_thumb_hash(w : Int, h : Int, rgba : Array[Byte]) -> Array[Byte] {
   let mut avg_b = 0.0
   let mut avg_a = 0.0
   for rc in rgba.chunks(4) {
-    let alpha = rc.get(3).unwrap_or_default().to_double() / 255.0
-    avg_r = avg_r + alpha / 255.0 * rc.get(0).unwrap_or_default().to_double()
-    avg_g = avg_g + alpha / 255.0 * rc.get(1).unwrap_or_default().to_double()
-    avg_b = avg_b + alpha / 255.0 * rc.get(2).unwrap_or_default().to_double()
+    let alpha = rc[3].to_double() / 255.0
+    avg_r = avg_r + alpha / 255.0 * rc[0].to_double()
+    avg_g = avg_g + alpha / 255.0 * rc[1].to_double()
+    avg_b = avg_b + alpha / 255.0 * rc[2].to_double()
     avg_a = avg_a + alpha
   }
   if avg_a > 0.0 {
@@ -67,13 +67,10 @@ pub fn rgba_to_thumb_hash(w : Int, h : Int, rgba : Array[Byte]) -> Array[Byte] {
 
   // Convert the image from RGBA to LPQA (composite atop the average color)
   for rc in rgba.chunks(4) {
-    let alpha = rc.get(3).unwrap_or_default().to_double() / 255.0
-    let r = avg_r * (1.0 - alpha) +
-      alpha / 255.0 * rc.get(0).unwrap_or_default().to_double()
-    let g = avg_g * (1.0 - alpha) +
-      alpha / 255.0 * rc.get(0).unwrap_or_default().to_double()
-    let b = avg_b * (1.0 - alpha) +
-      alpha / 255.0 * rc.get(0).unwrap_or_default().to_double()
+    let alpha = rc[3].to_double() / 255.0
+    let r = avg_r * (1.0 - alpha) + alpha / 255.0 * rc[0].to_double()
+    let g = avg_g * (1.0 - alpha) + alpha / 255.0 * rc[0].to_double()
+    let b = avg_b * (1.0 - alpha) + alpha / 255.0 * rc[0].to_double()
     l.push((r + g + b) / 3.0)
     p.push((r + g) / 2.0 - b)
     q.push(r - g)
