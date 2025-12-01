@@ -12,7 +12,10 @@ pub fn new_bit_reader(buf : Array[Byte], start : UInt64) -> BitReader {
 }
 
 ///|
-pub fn ensure_bits(self : BitReader, n : UInt) -> Unit raise PngError {
+pub fn BitReader::ensure_bits(
+  self : BitReader,
+  n : UInt,
+) -> Unit raise PngError {
   while self.bitlen < n {
     if self.pos >= self.buf.length().reinterpret_as_uint().to_uint64() {
       raise Inflate("unexpected EOF in bitstream")
@@ -25,7 +28,7 @@ pub fn ensure_bits(self : BitReader, n : UInt) -> Unit raise PngError {
 }
 
 ///|
-pub fn read_bits(self : BitReader, n : UInt) -> UInt raise PngError {
+pub fn BitReader::read_bits(self : BitReader, n : UInt) -> UInt raise PngError {
   self.ensure_bits(n)
   let mask = (1U << n.reinterpret_as_int()) - 1U
   let val = self.bitbuf & mask.to_uint64()
@@ -35,14 +38,14 @@ pub fn read_bits(self : BitReader, n : UInt) -> UInt raise PngError {
 }
 
 ///|
-pub fn align_to_byte(self : BitReader) -> Unit {
+pub fn BitReader::align_to_byte(self : BitReader) -> Unit {
   let drop = self.bitlen % 8
   self.bitbuf = self.bitbuf >> drop.reinterpret_as_int()
   self.bitlen = self.bitlen - drop
 }
 
 ///|
-pub fn consumed(self : BitReader) -> UInt noraise {
+pub fn BitReader::consumed(self : BitReader) -> UInt noraise {
   let back_bytes = self.bitlen / 8
   let res = self.pos - back_bytes.to_uint64()
   res.to_uint()

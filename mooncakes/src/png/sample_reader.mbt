@@ -12,7 +12,7 @@ pub fn new_sample_reader(data : Array[Byte], bit_depth : Byte) -> SampleReader {
 }
 
 ///|
-pub fn next_u16(self : SampleReader) -> UInt16? {
+pub fn SampleReader::next_u16(self : SampleReader) -> UInt16? {
   match self.bit_depth {
     8 =>
       if self.pos >= self.data.length().reinterpret_as_uint() {

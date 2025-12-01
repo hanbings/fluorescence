@@ -58,7 +58,10 @@ pub fn build_huffman(code_lengths : Array[Byte]) -> Huffman raise PngError {
 }
 
 ///|
-pub fn decode_huffman(self : Huffman, br : BitReader) -> Byte raise PngError {
+pub fn Huffman::decode_huffman(
+  self : Huffman,
+  br : BitReader,
+) -> Byte raise PngError {
   let mut code = 0
   for len in 1..=self.max_bits.reinterpret_as_int() {
     let bit = br.read_bits(1)
