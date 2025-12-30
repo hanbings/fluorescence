@@ -58,7 +58,11 @@ pub fn Image::crop_center(self : Image, w : Int, h : Int) -> Image {
 
 ///|
 /// Center-crop to a target aspect ratio `(aspect_w : aspect_h)`, keeping the largest area.
-pub fn Image::crop_to_aspect(self : Image, aspect_w : Int, aspect_h : Int) -> Image {
+pub fn Image::crop_to_aspect(
+  self : Image,
+  aspect_w : Int,
+  aspect_h : Int,
+) -> Image {
   if aspect_w <= 0 || aspect_h <= 0 {
     return Image::default()
   }
@@ -73,12 +77,12 @@ pub fn Image::crop_to_aspect(self : Image, aspect_w : Int, aspect_h : Int) -> Im
   let (cw, ch) = if lhs > rhs {
     // Too wide: reduce width.
     let ch = h
-    let cw = (h * aspect_w) / aspect_h
+    let cw = h * aspect_w / aspect_h
     (cw, ch)
   } else if lhs < rhs {
     // Too tall: reduce height.
     let cw = w
-    let ch = (w * aspect_h) / aspect_w
+    let ch = w * aspect_h / aspect_w
     (cw, ch)
   } else {
     (w, h)
@@ -100,7 +104,7 @@ pub fn Image::flip_h(self : Image) -> Image {
     .map(fn(idx) {
       let y = idx / w
       let x = idx - y * w
-      self.pixels[(w - 1 - x) + y * w]
+      self.pixels[w - 1 - x + y * w]
     })
     .collect()
   Image::{ pixels, width: w, heigth: h }
@@ -225,7 +229,11 @@ pub fn Image::resize(self : Image, new_width : Int, new_heigth : Int) -> Image {
 
 ///|
 /// Resize image using bilinear sampling.
-pub fn Image::resize_bilinear(self : Image, new_width : Int, new_heigth : Int) -> Image {
+pub fn Image::resize_bilinear(
+  self : Image,
+  new_width : Int,
+  new_heigth : Int,
+) -> Image {
   if new_width <= 0 || new_heigth <= 0 {
     return Image::default()
   }
@@ -240,7 +248,6 @@ pub fn Image::resize_bilinear(self : Image, new_width : Int, new_heigth : Int) -
     .map(fn(idx) {
       let y = idx / new_width
       let x = idx - y * new_width
-
       let sx = if new_width == 1 {
         0.0
       } else {
@@ -251,19 +258,16 @@ pub fn Image::resize_bilinear(self : Image, new_width : Int, new_heigth : Int) -
       } else {
         y.to_double() * (src_h - 1).to_double() / (new_heigth - 1).to_double()
       }
-
       let x0 = sx.to_int()
       let y0 = sy.to_int()
       let x1 = if x0 + 1 >= src_w { src_w - 1 } else { x0 + 1 }
       let y1 = if y0 + 1 >= src_h { src_h - 1 } else { y0 + 1 }
       let tx = sx - x0.to_double()
       let ty = sy - y0.to_double()
-
       let p00 = self.sample(x0, y0, BorderMode::Clamp)
       let p10 = self.sample(x1, y0, BorderMode::Clamp)
       let p01 = self.sample(x0, y1, BorderMode::Clamp)
       let p11 = self.sample(x1, y1, BorderMode::Clamp)
-
       let lerp = fn(a : Double, b : Double, t : Double) { a + (b - a) * t }
       let r0 = lerp(p00.r.to_double(), p10.r.to_double(), tx)
       let r1 = lerp(p01.r.to_double(), p11.r.to_double(), tx)
@@ -273,7 +277,6 @@ pub fn Image::resize_bilinear(self : Image, new_width : Int, new_heigth : Int) -
       let b1 = lerp(p01.b.to_double(), p11.b.to_double(), tx)
       let a0 = lerp(p00.a.to_double(), p10.a.to_double(), tx)
       let a1 = lerp(p01.a.to_double(), p11.a.to_double(), tx)
-
       RgbaColor::{
         r: clamp_u8_f(lerp(r0, r1, ty)),
         g: clamp_u8_f(lerp(g0, g1, ty)),
@@ -284,5 +287,3 @@ pub fn Image::resize_bilinear(self : Image, new_width : Int, new_heigth : Int) -
     .collect()
   Image::{ pixels: dst_pixels, width: new_width, heigth: new_heigth }
 }
-
-

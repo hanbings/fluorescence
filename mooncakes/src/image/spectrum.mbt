@@ -24,5 +24,3 @@ pub fn ImageSpectrum::to_image(self : ImageSpectrum) -> Image {
   })
   Image::{ pixels, width: self.width, heigth: self.heigth }
 }
-
-

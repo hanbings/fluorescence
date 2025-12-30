@@ -98,16 +98,17 @@ test "crop_center_and_aspect" {
   let q1 = RgbaColor::{ r: 11, g: 0, b: 0, a: 255 }
   let q2 = RgbaColor::{ r: 12, g: 0, b: 0, a: 255 }
   let q3 = RgbaColor::{ r: 13, g: 0, b: 0, a: 255 }
-  let img = Image::{ pixels: [p0, p1, p2, p3, q0, q1, q2, q3], width: 4, heigth: 2 }
+  let img = Image::{
+    pixels: [p0, p1, p2, p3, q0, q1, q2, q3],
+    width: 4,
+    heigth: 2,
+  }
   let cc = img.crop_center(2, 2)
   assert_eq(cc.width, 2)
   assert_eq(cc.heigth, 2)
   assert_eq(cc.pixels, [p1, p2, q1, q2])
-
   let sq = img.crop_to_aspect(1, 1)
   assert_eq(sq.width, 2)
   assert_eq(sq.heigth, 2)
   assert_eq(sq.pixels, [p1, p2, q1, q2])
 }
-
-

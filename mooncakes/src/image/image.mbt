@@ -10,5 +10,3 @@
 /// - `geometry.mbt`: crop/flip/rotate/resize
 /// - `filters.mbt`: convolution & filters
 /// - `spectrum.mbt`: grayscale spectrum helpers
-
-

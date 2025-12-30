@@ -43,12 +43,8 @@ test "invert_rgb_and_brightness" {
   let img = Image::{ pixels: [p], width: 1, heigth: 1 }
   let inv = img.invert_rgb()
   assert_eq(inv.pixels[0], RgbaColor::{ r: 245, g: 235, b: 225, a: 40 })
-
   let bright = img.adjust_brightness(300)
   assert_eq(bright.pixels[0], RgbaColor::{ r: 255, g: 255, b: 255, a: 40 })
-
   let dark = img.adjust_brightness(-300)
   assert_eq(dark.pixels[0], RgbaColor::{ r: 0, g: 0, b: 0, a: 40 })
 }
-
-

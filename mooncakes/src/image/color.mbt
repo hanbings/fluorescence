@@ -23,5 +23,3 @@ pub fn RgbaColor::calc_dist(color_a : RgbaColor, color_b : RgbaColor) -> Float {
   let da = Float::from_byte(color_a.a - color_b.a).pow(2)
   (dr + dg + db + da).sqrt()
 }
-
-

@@ -23,5 +23,3 @@ pub(all) struct ImageSpectrum {
   heigth : Int
   data : Array[Double]
 } derive(Default, Show)
-
-

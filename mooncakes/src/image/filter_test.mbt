@@ -29,5 +29,3 @@ test "gaussian_blur3_center_impulse" {
   let out = img.gaussian_blur3(BorderMode::Clamp)
   assert_eq(out.pixels[4], RgbaColor::{ r: 64, g: 64, b: 64, a: 255 })
 }
-
-

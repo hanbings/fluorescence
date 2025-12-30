@@ -7,8 +7,11 @@ pub(all) enum BorderMode {
   Clamp
   /// Reflect coordinates at the image edges (mirror).
   Reflect
+  /// Fill out-of-bounds with a constant color.
+  Constant(RgbaColor)
 }
 
+///|
 fn reflect_coord(c0 : Int, max : Int) -> Int {
   if max <= 0 {
     return 0
@@ -25,7 +28,13 @@ fn reflect_coord(c0 : Int, max : Int) -> Int {
   c
 }
 
-pub fn Image::sample(self : Image, x : Int, y : Int, border : BorderMode) -> RgbaColor {
+///|
+pub fn Image::sample(
+  self : Image,
+  x : Int,
+  y : Int,
+  border : BorderMode,
+) -> RgbaColor {
   match border {
     BorderMode::Zero =>
       if x < 0 || y < 0 || x >= self.width || y >= self.heigth {
@@ -53,7 +62,11 @@ pub fn Image::sample(self : Image, x : Int, y : Int, border : BorderMode) -> Rgb
       let sy = reflect_coord(y, self.heigth)
       self.pixels[sx + sy * self.width]
     }
+    BorderMode::Constant(c) =>
+      if x < 0 || y < 0 || x >= self.width || y >= self.heigth {
+        c
+      } else {
+        self.pixels[x + y * self.width]
+      }
   }
 }
-
-

@@ -50,5 +50,3 @@ test "resize_bilinear_linear_gradient" {
   assert_eq(out.pixels[2].r, 255)
   assert_eq(out.pixels[1].r, 128)
 }
-
-
