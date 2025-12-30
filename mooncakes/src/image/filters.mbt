@@ -122,5 +122,3 @@ pub fn Image::sobel_edges(self : Image, border : BorderMode) -> Image {
     .collect()
   Image::{ pixels, width: w, heigth: h }
 }
-
-

@@ -1,6 +1,5 @@
 ///|
 /// Internal numeric helpers.
-
 pub fn clamp_u8(v : Int) -> Byte {
   if v < 0 {
     0
@@ -11,7 +10,8 @@ pub fn clamp_u8(v : Int) -> Byte {
   }
 }
 
-fn round_to_int(v : Double) -> Int {
+///|
+pub fn round_to_int(v : Double) -> Int {
   if v >= 0.0 {
     (v + 0.5).to_int()
   } else {
@@ -19,8 +19,7 @@ fn round_to_int(v : Double) -> Int {
   }
 }
 
+///|
 pub fn clamp_u8_f(v : Double) -> Byte {
   clamp_u8(round_to_int(v))
 }
-
-

@@ -23,5 +23,3 @@ test "spectrum_to_image_basic" {
   assert_eq(img.pixels[0], RgbaColor::{ r: 0, g: 0, b: 0, a: 255 })
   assert_eq(img.pixels[1], RgbaColor::{ r: 255, g: 255, b: 255, a: 255 })
 }
-
-

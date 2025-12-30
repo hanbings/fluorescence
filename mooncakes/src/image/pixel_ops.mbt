@@ -80,5 +80,3 @@ pub fn Image::adjust_brightness(self : Image, delta : Int) -> Image {
     }
   })
 }
-
-
