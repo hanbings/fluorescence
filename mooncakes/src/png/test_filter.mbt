@@ -12,7 +12,8 @@ fn enc_sub(u : Array[Byte], bpp : Int) -> Array[Byte] {
   let f : Array[Byte] = Array::make(u.length(), 0)
   for x in 0..<u.length() {
     let a = if x >= bpp { u[x - bpp] } else { 0 }
-    f[x] = u[x] + a
+    // filtered[x] = raw[x] - left(x) (wrapping)
+    f[x] = sub_wrap_u8(u[x], a)
   }
   f
 }
